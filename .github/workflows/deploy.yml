@@ -1,0 +1,39 @@
+# workflow to automatically build flutter web app and deploy to github pages
+
+name: Build and Deploy to Github Pages
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+        - uses: actions/checkout@v3
+
+        - uses: subosito/flutter-action@v2
+          with:
+            flutter-version: '3.10.5'
+            channel: 'stable'
+
+        - run: flutter pub get
+        - run: flutter build web --release
+        - uses: actions/checkout@v3
+        
+          name: copy
+          env:
+            SRC_FOLDER_PATH: 'build/web'
+            TARGET_BRANCH: 'web'
+            runs:
+                cd SRC_FOLDER_PATH
+                git init
+                git add .
+                git checkout -b $TARGET_BRANCH
+                git commit -m "WEB DEPLOYMENT"
+                git push origin $TARGET_BRANCH
