@@ -31,12 +31,9 @@ jobs:
             SRC_FOLDER_PATH: 'build/web'
             TARGET_BRANCH: 'web'
             runs:
-                files=$(find $SRC_FOLDER_PATH -type f) 
-                git config --global user.name 'GitHub Action'
-                git config --global user.email 'action@github.com'
-                git fetch                         
-                git checkout $TARGET_BRANCH       
-                git checkout ${GITHUB_REF##*/} -- $files 
-                git add -a
-                git diff-index --quiet HEAD ||  git commit -am "deploy files" 
-                git push origin $TARGET_BRANCH 
+                cd SRC_FOLDER_PATH
+                git init
+                git add .
+                git checkout -b $TARGET_BRANCH
+                git commit -m "WEB DEPLOYMENT"
+                git push origin $TARGET_BRANCH
